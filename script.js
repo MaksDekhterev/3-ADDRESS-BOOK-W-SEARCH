@@ -200,23 +200,206 @@ const contacts = [
     creationDate: "2024-06-09T12:34:56.789Z",
   },
 ];
-const form = document.querySelector("#form");
+let filteredContacts = [...contacts];
+// окно диалога
+const dialog = document.querySelector("#dialog");
+const overlay = document.querySelector("#overlay");
+const addNewContact = document.querySelector("#addNewContact");
 
-form.addEventListener("submit", (evt) => {
+// форма в которой диалог
+const formModal = document.querySelector("#formModal");
+const gender = document.querySelector("#modalGender");
+const addPhoto = document.querySelector("#addPhotoModal");
+const photoContact = document.querySelector(".modal-content__addPhoto__img");
+
+// форма поиска
+const formSearch = document.querySelector("#formSearch");
+const result = document.querySelector("#result");
+const genderSelect = formSearch.querySelector("[name='gender']");
+const sortSelect = formSearch.querySelector("[name='sort']");
+const searchInput = formSearch.querySelector("[name='search']");
+const openModalWin = document.querySelector("#openModalWin");
+const contactCard = document.querySelector(".asideRight");
+
+// открыть форму
+openModalWin.onclick = () => {
+  overlay.style.display = "flex";
+  dialog.showModal();
+};
+
+// закрыть форму если кликнуть за диалогом
+// dialog.addEventListener("click", (evt) => {
+//   const rect = dialog.getBoundingClientRect();
+//   const isInDialog =
+//     rect.top <= evt.clientY &&
+//     evt.clientY <= rect.top + rect.height &&
+//     rect.left <= evt.clientX &&
+//     evt.clientX <= rect.left + rect.width;
+//   if (!isInDialog) {
+//     dialog.close();
+//     overlay.style.display = "none";
+//   }
+// });
+
+// Начальное отображение контактов
+render(contacts);
+
+formModal.addEventListener("submit", (evt) => {
   evt.preventDefault();
   const obj = {
     id: Date.now(),
-    name: form.name,
-    surname: form.surname,
-    about: form.about,
-    gender: form.gender,
-    mail: form.mail,
-    phone: form.phone,
-    creationDate: form.creationDate, 
+    name: formModal.name.value,
+    surname: formModal.surname.value,
+    about: formModal.about.value,
+    gender: formModal.modalGender.value,
+    mail: formModal.mail.value,
+    phone: formModal.phone.value,
+    creationDate: "123",
   };
-  contacts.push(obj)
+  contacts.push(obj);
+  render(contacts);
+  dialog.close();
+  overlay.style.display = "none";
 });
 
-function render(){
+// фильр и сорт при отправке формы
+formSearch.addEventListener("submit", (evt) => {
+  evt.preventDefault();
+  applyFilters();
+});
 
+// Обработчики событий для сортировки и фильтрации по полу
+genderSelect.addEventListener("change", applyFilters);
+sortSelect.addEventListener("change", applyFilters);
+searchInput.addEventListener("input", applyFilters);
+
+// Функция фильтрации и сортировки
+function applyFilters() {
+  const searchValue = searchInput.value.toLowerCase();
+  const genderValue = genderSelect.value;
+  const sortValue = sortSelect.value;
+
+  filterAndSort(searchValue, genderValue, sortValue);
+  render(filteredContacts);
+}
+
+// Логика фильтрации и сортировки контактов
+function filterAndSort(searchInput, gender, sort) {
+  filteredContacts = [...contacts];
+
+  // gender
+  if (gender) {
+    filteredContacts = filteredContacts.filter(
+      (contact) => contact.gender === gender
+    );
+  }
+
+  // name surname
+  if (searchInput) {
+    filteredContacts = filteredContacts.filter(
+      (contact) =>
+        contact.name.toLowerCase().includes(searchInput) ||
+        contact.surname.toLowerCase().includes(searchInput)
+    );
+  }
+
+  // sort
+  switch (sort) {
+    case "a-z":
+      filteredContacts.sort((a, b) => a.name.localeCompare(b.name));
+      break;
+    case "z-a":
+      filteredContacts.sort((a, b) => b.name.localeCompare(a.name));
+      break;
+    case "oldest":
+      filteredContacts.sort(
+        (a, b) => new Date(a.creationDate) - new Date(b.creationDate)
+      );
+      break;
+    case "newest":
+      filteredContacts.sort(
+        (a, b) => new Date(b.creationDate) - new Date(a.creationDate)
+      );
+      break;
+    default:
+      break;
+  }
+}
+
+function render(currentContacts) {
+  result.innerHTML = "";
+
+  currentContacts.forEach((obj) => {
+    const li = document.createElement("li");
+    li.className = "contact";
+    li.innerHTML = `<div class="contact__wrapper"><img
+              src=${
+                obj.gender === "male"
+                  ? "./src/images/ava-men.png"
+                  : "./src/images/ava-wom.png"
+              }
+              alt="аватарка контакта"
+              class="contact__img"
+            />
+            <div class="contact__info">
+              <p class="contact__info__name">${obj.name}</p>
+              <p class="contact__info__status">${obj.about}</p>
+            </div>
+            </div>
+            <div class="contact__wrapper2">
+            <a href="tel:+71234567890" class="contact__number"
+              >${obj.phone}</a
+            >
+            <a href="mailto:" class="contact__email">${obj.mail}</a>
+            </div>`;
+
+    li.addEventListener("click", () => showContactCard(obj));
+
+    result.prepend(li);
+  });
+}
+
+// aside right card contact
+function showContactCard(contact) {
+  contactCard.innerHTML = `
+      <div class="asideRight__user">
+      <img
+        class="asideRight__user__photo"
+        src="${
+          contact.gender === "male"
+            ? "./src/images/ava-men.png"
+            : "./src/images/ava-wom.png"
+        }"
+        alt="photo"
+      />
+      <p class="asideRight__user__name">${contact.name} ${contact.surname}</p>
+    </div>
+    <button class="asideRight__editBtn">Edit contact</button>
+    <div class="asideRight__link">
+      <button class="asideRight__tel" onclick="window.location.href='tel:+${
+        contact.phone
+      }'">
+        <img
+          class="asideRight__tel__img"
+          src="./src/images/telephone.png"
+          alt="telephone icon"
+        />
+      </button>
+      <button class="asideRight__email" onclick="window.location.href='mailto:${
+        contact.mail
+      }'">
+        <img
+          class="asideRight__email__img"
+          src="./src/images/email.png"
+          alt="email icon"
+        />
+      </button>
+    </div>
+    <div class="asideRight__date">
+      <p class="asideRight__date__text">Date of create</p>
+      <p class="asideRight__date__numbers">${new Date(
+        contact.creationDate
+      ).toLocaleDateString()}</p>
+    </div>
+  `;
 }

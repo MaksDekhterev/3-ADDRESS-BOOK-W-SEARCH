@@ -14,38 +14,86 @@
     />
   </head>
   <body>
-    <div class="modal-overlay" id="modal">
-      <form id="formModal" action="">
-        <dialog class="modalWindow" method="dialog" open>
-          <div class="modal-content">
-            <h2>Add new contact</h2>
-            <div class="modal-content__addPhoto">
+    <div class="modal-overlay" id="overlay">
+      <dialog id="dialog" class="modalWindow" method="dialog">
+        <form id="formModal" class="modal-content" action="">
+          <h2>Add new contact</h2>
+          <div class="modal-content__addPhoto">
+            <img src="" alt="" class="modal-content__addPhoto__img" />
+            <button
+              type="input"
+              id="addPhotoModal"
+              class="modal-content__addPhoto__btn"
+            >
               <img
-                src="./src/images/ava-men.png"
+                class="modal-content__addPhoto__btn__img"
+                src="./src/images/plus.webp"
                 alt=""
-                class="modal-content__addPhoto__img"
-              />
-              <button type="button" class="modal-content__addPhoto__btn">
-                <img
-                  class="modal-content__addPhoto__btn__img"
-                  src="./src/images/plus.webp"
-                  alt=""
-                />Add image
-              </button>
-              <div class="modal-content__about">
-                <label for="about" class="modal-content__about__label"
-                  >About</label
-                >
-                <input
-                  class="modal-content__about__input"
-                  name="about"
-                  type="text"
-                />
-              </div>
-            </div>
+              />Add image
+            </button>
           </div>
-        </dialog>
-      </form>
+          <div class="modal-content__about">
+            <label for="about" class="modal-content__about__label">About</label>
+            <input
+              class="modal-content__about__input"
+              name="about"
+              type="text"
+            />
+          </div>
+          <div class="modal-content__name">
+            <label for="name" class="modal-content__name__label">Name</label>
+            <input class="modal-content__name__input" name="name" type="text" />
+          </div>
+          <div class="modal-content__surname">
+            <label for="surname" class="modal-content__surname__label"
+              >Surname</label
+            >
+            <input
+              class="modal-content__surname__input"
+              name="surname"
+              type="text"
+            />
+          </div>
+          <div class="modal-content__phone">
+            <label for="phone" class="modal-content__phone__label">Phone</label>
+            <input
+              class="modal-content__phone__input"
+              name="phone"
+              type="tel"
+            />
+          </div>
+          <div class="modal-content__email">
+            <label for="mail" class="modal-content__email__label">Email</label>
+            <input
+              class="modal-content__email__input"
+              name="mail"
+              type="email"
+            />
+          </div>
+          <div class="modal-content__bottom">
+            <select
+              name="modalGender"
+              id="modalGender"
+              class="modal-content__bottom__gender"
+            >
+              <option value="" disabled>Gender</option>
+              <option value="male">Male</option>
+              <option value="female">Female</option>
+            </select>
+            <button
+              type="submit"
+              id="addNewContact"
+              class="modal-content__bottom__btn"
+            >
+              <img
+                class="modal-content__bottom__btn__img"
+                src="./src/images/plus.webp"
+                alt="Add"
+              />Add new contact
+            </button>
+          </div>
+        </form>
+      </dialog>
     </div>
     <aside class="asideLeft">
       <div class="myCard">
@@ -84,12 +132,18 @@
     <div class="center">
       <header id="header" class="header">
         <form id="formSearch" class="form">
-          <input type="text" class="form__input" id="inputPanelSearch" />
+          <input
+            name="search"
+            type="text"
+            value="input"
+            class="form__input"
+            id="inputPanelSearch"
+          />
           <button class="form__searchButton" id="searchBtn">Search</button>
           <select name="gender" id="gender" class="form__gender">
             <option value="">Gender</option>
-            <option value="Male">Male</option>
-            <option value="Female">Female</option>
+            <option value="male">Male</option>
+            <option value="female">Female</option>
           </select>
           <select name="sort" id="sort" class="form__sort">
             <option value="">Sort</option>
@@ -99,22 +153,17 @@
             <option value="oldest">Oldest</option>
           </select>
         </form>
-        <button
-          onclick="window.startDialog.showModal()"
-          type="button"
-          id="newContact"
-          class="form__addNewContact"
-        >
+        <button type="button" id="openModalWin" class="form__openModalWin">
           <img
             src="./src/images/plus.webp"
             alt="+"
-            class="form__addNewContact__img"
+            class="form__openModalWin__img"
           />New contact
         </button>
       </header>
       <main>
         <ul id="result">
-          <li id="li" class="contact">
+          <!-- <li id="li" class="contact">
             <img
               src="./src/images/ava-men.png"
               alt="аватарка контакта"
@@ -128,10 +177,10 @@
               >8 (123) 456-78-90</a
             >
             <a href="mailto:" class="contact__email">kurtcobain@gmail.com</a>
-          </li>
+          </li> -->
         </ul>
         <aside class="asideRight">
-          <div class="asideRight__user">
+          <!-- <div class="asideRight__user">
             <img
               class="asideRight__user__photo"
               src="./src/images/ava-men.png"
@@ -159,7 +208,7 @@
           <div class="asideRight__date">
             <p class="asideRight__date__text">Date of create</p>
             <p class="asideRight__date__numbers">20.08.2024</p>
-          </div>
+          </div> -->
         </aside>
       </main>
     </div>
